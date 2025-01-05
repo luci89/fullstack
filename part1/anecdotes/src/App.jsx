@@ -25,10 +25,20 @@ const App = () => {
     setSelected(Math.round((Math.random()*7)))
   }
 
+  const [votes, setVotes] = useState(new Uint8Array(8))
+  const handleVote = () => {
+    const voteCopy = [...votes]
+    voteCopy[selected] += 1
+    setVotes(voteCopy)
+  }
+
   return (
     <div>
       {anecdotes[selected]}
+      <br/>
+      has {votes[selected]} votes
       <div>
+        <Button onClick={handleVote} label='vote' />
         <Button onClick={handleNextAnecdote} label='next anecdote' />
       </div>
     </div>
