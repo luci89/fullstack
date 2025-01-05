@@ -8,6 +8,16 @@ const Button = (props) => {
   )
 }
 
+const AnecdoteItem = (props) => {
+  return (
+    <div>
+      {props.content}
+      <br />
+      has {props.vote} votes
+    </div>
+  )
+}
+
 const App = () => {
   const anecdotes = [
     'If it hurts, do it more often.',
@@ -26,21 +36,24 @@ const App = () => {
   }
 
   const [votes, setVotes] = useState(new Uint8Array(8))
+  const [mostVoted, setMostVoted] = useState()
   const handleVote = () => {
     const voteCopy = [...votes]
     voteCopy[selected] += 1
     setVotes(voteCopy)
+    setMostVoted(voteCopy.indexOf(Math.max(...voteCopy)))
   }
 
   return (
     <div>
-      {anecdotes[selected]}
-      <br/>
-      has {votes[selected]} votes
+      <h1>Anecdote of the day</h1>
+      <AnecdoteItem content={anecdotes[selected]} vote={votes[selected]}/>
       <div>
         <Button onClick={handleVote} label='vote' />
         <Button onClick={handleNextAnecdote} label='next anecdote' />
       </div>
+      <h1>Anecdote with most votes</h1>
+      {mostVoted >= 0 ? <AnecdoteItem content={anecdotes[mostVoted]} vote={votes[mostVoted]}/> : '-'}
     </div>
   )
 }
