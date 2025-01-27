@@ -1,7 +1,7 @@
 const Header = ({ course }) => {
     return (
         <div>
-            <h1>{course}</h1>
+            <h2>{course}</h2>
         </div>
     )
 }
@@ -34,7 +34,6 @@ const Total = ({ parts }) => {
 }
 
 const Course = ({ course }) => {
-
     return (
         <div>
             <Header course={course.name} />
