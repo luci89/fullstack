@@ -1,27 +1,4 @@
-const Header = ({ course }) => {
-  return (
-    <div>
-      <h1>{course}</h1>
-    </div>
-  )
-}
-
-const Part = ({ part, exercises }) => {
-  return (
-    <div>
-      <p>{part} {exercises}</p>
-    </div>
-  )
-}
-
-const Content = ({ parts }) => {
-  const contentBody = parts.map(p => <Part part={p.name} exercises={p.exercises} />)
-  return (
-    <div>
-      {contentBody}
-    </div>
-  )
-}
+import Course from './Course'
 
 const Total = ({ parts }) => {
   const total = parts[0].exercises + parts[1].exercises + parts[2].exercises
@@ -34,27 +11,29 @@ const Total = ({ parts }) => {
 
 const App = () => {
   const course = {
+    id: 1,
     name: 'Half Stack application development',
     parts: [
       {
         name: 'Fundamentals of React',
-        exercises: 10
-      }, {
+        exercises: 10,
+        id: 1
+      },
+      {
         name: 'Using props to pass data',
-        exercises: 7
-      }, {
+        exercises: 7,
+        id: 2
+      },
+      {
         name: 'State of a component',
-        exercises: 14
+        exercises: 14,
+        id: 3
       }
     ]
   }
 
   return (
-    <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
-    </div>
+    <Course course={course} />
   )
 }
 
