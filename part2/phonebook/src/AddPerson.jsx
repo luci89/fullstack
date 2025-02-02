@@ -1,3 +1,5 @@
+import phonebookService from './services/phonebook'
+
 const AddPerson = ({ currentName, currentNumber, currentList, updateName, updateNumber, updateList, updateDisplay, updateFilter }) => {
     const handleNameChange = (event) => {
         updateName(event.target.value)
@@ -20,11 +22,15 @@ const AddPerson = ({ currentName, currentNumber, currentList, updateName, update
             name: currentName,
             number: currentNumber
         }
-        updateList(currentList.concat(personObject))
-        updateDisplay(currentList.concat(personObject))
-        updateName('')
-        updateNumber('')
-        updateFilter('')
+        phonebookService
+            .addPerson(personObject)
+            .then(returnedPerson => {
+                updateList(currentList.concat(returnedPerson))
+                updateDisplay(currentList.concat(returnedPerson))
+                updateName('')
+                updateNumber('')
+                updateFilter('')
+            })
     }
 
     return (
