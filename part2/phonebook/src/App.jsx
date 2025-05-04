@@ -10,6 +10,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [filter, setFilter] = useState('')
   const [shownNumber, setShownNumber] = useState(persons)
+  const [message, setMessage] = useState(null)
 
   const showFiltered = (list, filterValue) => {
     if (filterValue === '') {
@@ -33,6 +34,35 @@ const App = () => {
       })
   }
 
+  const Banner = () => {
+    const bannerStyle = {
+      left: '10px',
+      right: '10px',
+      borderStyle: 'solid',
+      borderWidth: '2px',
+      backgroundColor: 'lightgrey',
+      padding: '20px'
+    }
+
+    if (message) {
+      if (message.msgType === 'success') {
+        bannerStyle.color = 'green'
+        bannerStyle.borderColor = 'green'
+      } else {
+        bannerStyle.color = 'red'
+        bannerStyle.borderColor = 'red'
+      }
+
+      return (
+        <div style={bannerStyle}>
+          {message.msg}
+        </div>
+      )
+    }
+
+    return null
+  }
+
   useEffect(() => {
     listUpdate()
   }, [])
@@ -40,11 +70,12 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Banner />
       <Filter currentState={filter} handleFilterChange={handleFilterChange} />
       <h2>Add a New</h2>
-      <AddPerson currentName={newName} currentNumber={newNumber} currentList={persons} updateName={setNewName} updateNumber={setNewNumber} updateList={setPersons} updateDisplay={setShownNumber} updateFilter={setFilter} listUpdate={listUpdate}/>
+      <AddPerson currentName={newName} currentNumber={newNumber} currentList={persons} updateName={setNewName} updateNumber={setNewNumber} updateList={setPersons} updateDisplay={setShownNumber} updateFilter={setFilter} listUpdate={listUpdate} message={setMessage} />
       <h2>Numbers</h2>
-      <Persons shownList={shownNumber} updateList={listUpdate} />
+      <Persons shownList={shownNumber} updateList={listUpdate} message={setMessage}/>
     </div>
   )
 }

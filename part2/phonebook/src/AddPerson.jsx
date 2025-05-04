@@ -1,6 +1,6 @@
 import phonebookService from './services/phonebook'
 
-const AddPerson = ({ currentName, currentNumber, currentList, updateName, updateNumber, updateList, updateDisplay, updateFilter, listUpdate }) => {
+const AddPerson = ({ currentName, currentNumber, currentList, updateName, updateNumber, updateList, updateDisplay, updateFilter, listUpdate, message }) => {
     const handleNameChange = (event) => {
         updateName(event.target.value)
     }
@@ -25,6 +25,18 @@ const AddPerson = ({ currentName, currentNumber, currentList, updateName, update
                         updateName('')
                         updateNumber('')
                         updateFilter('')
+                    }).catch(err => {
+                        if (err.status === 404) {
+                            message({ msg: `Information of ${currentName} has already been removed from server`, msgType: 'error' })
+                            setTimeout(() => {
+                                message(null)
+                            }, 3000)
+                        } else {
+                            message({ msg: err.status, msgType: 'error' })
+                            setTimeout(() => {
+                                message(null)
+                            }, 3000)
+                        }
                     })
             }
         } else {
@@ -40,6 +52,10 @@ const AddPerson = ({ currentName, currentNumber, currentList, updateName, update
                     updateName('')
                     updateNumber('')
                     updateFilter('')
+                    message({ msg: `Added ${returnedPerson.name}`, msgType: 'success' })
+                    setTimeout(() => {
+                        message(null)
+                    }, 3000)
                 })
         }
     }

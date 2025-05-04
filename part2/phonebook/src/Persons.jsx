@@ -1,6 +1,6 @@
 import phonebookService from './services/phonebook'
 
-const Persons = ({ shownList, updateList }) => {
+const Persons = ({ shownList, updateList, message }) => {
     const handlePersonDeletion = (event) => {
         event.preventDefault()
         if (confirm(`Delete ${event.target.name}?`)) {
@@ -8,7 +8,19 @@ const Persons = ({ shownList, updateList }) => {
                 .deletePerson(event.target.id)
                 .then(
                     updateList()
-                )
+                ).catch(err => {
+                    if (err.status === 404) {
+                        message({ msg: `Information of ${event.target.name} has already been removed from server`, msgType: 'error' })
+                        setTimeout(() => {
+                            message(null)
+                        }, 3000)
+                    } else {
+                        message({ msg: err.status, msgType: 'error' })
+                        setTimeout(() => {
+                            message(null)
+                        }, 3000)
+                    }
+                })
         }
     }
 
