@@ -1,6 +1,6 @@
 import phonebookService from './services/phonebook'
 
-const AddPerson = ({ currentName, currentNumber, currentList, updateName, updateNumber, updateList, updateDisplay, updateFilter }) => {
+const AddPerson = ({ currentName, currentNumber, currentList, updateName, updateNumber, updateList, updateDisplay, updateFilter, listUpdate }) => {
     const handleNameChange = (event) => {
         updateName(event.target.value)
     }
@@ -12,25 +12,36 @@ const AddPerson = ({ currentName, currentNumber, currentList, updateName, update
     const addPerson = (event) => {
         event.preventDefault()
         const found = currentList.find(x => {
-            return x.name.toLocaleLowerCase() === currentName.toLocaleLowerCase() ? true : false
+            return x.name.toLocaleLowerCase() === currentName.toLocaleLowerCase() ? x : null
         })
         if (found) {
-            return alert(`${currentName} is already added to phonebook`)
+            if (confirm(`${currentName} is already added to phonebook, replace the old number with a new one?`)) {
+                const personObject = found
+                personObject.number = currentNumber
+                phonebookService
+                    .updatePerson(personObject)
+                    .then(() => {
+                        listUpdate()
+                        updateName('')
+                        updateNumber('')
+                        updateFilter('')
+                    })
+            }
+        } else {
+            const personObject = {
+                name: currentName,
+                number: currentNumber
+            }
+            phonebookService
+                .createPerson(personObject)
+                .then(returnedPerson => {
+                    updateList(currentList.concat(returnedPerson))
+                    updateDisplay(currentList.concat(returnedPerson))
+                    updateName('')
+                    updateNumber('')
+                    updateFilter('')
+                })
         }
-
-        const personObject = {
-            name: currentName,
-            number: currentNumber
-        }
-        phonebookService
-            .addPerson(personObject)
-            .then(returnedPerson => {
-                updateList(currentList.concat(returnedPerson))
-                updateDisplay(currentList.concat(returnedPerson))
-                updateName('')
-                updateNumber('')
-                updateFilter('')
-            })
     }
 
     return (

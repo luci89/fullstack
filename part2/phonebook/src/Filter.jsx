@@ -1,13 +1,4 @@
-const Filter = ({ currentState, updateFilter, updateList, fullList }) => {
-    const handleFilterChange = (event) => {
-        updateFilter(event.target.value)
-        if (event.target.value === '') {
-            updateList(fullList)
-        } else {
-            updateList(fullList.filter(x => x.name.toLocaleLowerCase().includes(event.target.value.toLocaleLowerCase())))
-        }
-    }
-
+const Filter = ({ currentState, handleFilterChange}) => {
     return (
         <form>
             <div>
