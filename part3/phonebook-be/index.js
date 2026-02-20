@@ -1,8 +1,10 @@
 const express = require('express')
 const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
 
 app.use(express.json())
+app.use(cors())
 
 morgan.token('body', (req, res) => {
     return JSON.stringify(req.body)
@@ -63,6 +65,8 @@ app.delete('/api/persons/:id', (request, response) => {
 app.post('/api/persons', (request, response) => {
     const person = request.body
     person.id = persons.length + 1
+    console.log("kjshkdsad")
+    console.log(persons)
     if (person.name) {
         const duplicate = persons.find(x => x.name.toLocaleLowerCase() === person.name.toLocaleLowerCase())
         if (duplicate) {
