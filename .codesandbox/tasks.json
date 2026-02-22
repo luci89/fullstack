@@ -1,0 +1,139 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "required": ["name", "command"],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "run server",
+          "examples": ["Start a development server"]
+        },
+        "command": {
+          "type": "string",
+          "description": "npm start",
+          "examples": ["npm start"]
+        },
+        "runAtStart": {
+          "type": "boolean",
+          "description": "Run this task at the start of the container"
+        },
+        "restartOn": {
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "array",
+              "description": "Restart this task whenever these files change",
+              "items": {
+                "type": "string",
+                "description": "A file path or a glob to match"
+              },
+              "minimum": 1,
+              "examples": ["package.json", "part3/phonebook-be/*.js"]
+            },
+            "branch": {
+              "type": "boolean",
+              "description": "Restart this task when creating a new branch/fork"
+            }
+          }
+        },
+        "preview": {
+          "$ref": "#/definitions/Preview",
+          "description": "Preview configuration for this task"
+        }
+      }
+    },
+    "SetupTask": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the task",
+          "example": "Start development server"
+        },
+        "command": {
+          "type": "string",
+          "description": "Command to run",
+          "examples": ["npm start"]
+        }
+      }
+    },
+    "Preview": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "port": {
+          "type": "number",
+          "description": "Port number to serve the preview on"
+        },
+        "prLink": {
+          "type": "string",
+          "description": "Decide how the preview should be opened from a pull request",
+          "anyOf": [
+            {
+              "const": "direct",
+              "title": "Directly open the preview from a pull request"
+            },
+            {
+              "const": "devtool",
+              "title": "Open the preview with an experimental devtools"
+            }
+          ]
+        }
+      }
+    }
+  },
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string",
+      "default": "https://codesandbox.io/schemas/tasks.json"
+    },
+    "setupTasks": {
+      "oneOf": [
+        {
+          "type": "string",
+          "description": "Command to run"
+        },
+        {
+          "type": "array",
+          "description": "A list of tasks to run as a part of the project setup",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "description": "Command to run"
+              },
+              {
+                "$ref": "#/definitions/SetupTask"
+              }
+            ]
+          }
+        },
+        {
+          "$ref": "#/definitions/SetupTask"
+        }
+      ]
+    },
+    "tasks": {
+      "type": "object",
+      "description": "A dictionary of all available tasks",
+      "additionalProperties": {
+        "description": "The ID of the task",
+        "oneOf": [
+          {
+            "type": "string",
+            "description": "Command to run"
+          },
+          {
+            "$ref": "#/definitions/Task"
+          }
+        ]
+      }
+    }
+  }
+}
